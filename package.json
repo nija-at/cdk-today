@@ -1,23 +1,31 @@
 {
   "name": "cdk-today",
   "version": "0.1.0",
-  "description": "Github workflow for CDK developers",
+  "description": "Everyday issue and PR workflows for CDK repo maintainers",
   "author": "Niranjan Jayakar",
   "license": "Apache-2.0",
   "bin": "cdk-today",
   "scripts": {
     "build": "tsc && tslint -p tsconfig.json",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "devDependencies": {
-    "typescript": "^3.7.2",
+    "@types/inquirer": "^6.5.0",
+    "@types/jest": "^24.0.23",
     "@types/node": "^12.12.14",
-    "tslint": "^5.20.1",
+    "@types/request": "^2.48.3",
     "@types/request-promise-native": "^1.0.17",
-    "@types/request": "^2.48.3"
+    "jest": "^24.9.0",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.2"
   },
   "dependencies": {
     "request-promise-native": "^1.0.8",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "inquirer": "^7.0.0"
+  },
+  "jest": {
+    "clearMocks": true,
+    "testMatch": [ "**/*.test.js" ]
   }
 }

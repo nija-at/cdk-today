@@ -4,7 +4,17 @@
   ],
   "rules": {
     "eofline": false,
+    "forin": false,
     "indent": [true, "spaces", 2],
+    "interface-name": false,
+    "max-classes-per-file": false,
+    "member-ordering": [
+      true,
+      {
+        "order": "instance-sandwich"
+      }
+    ],
+    "object-literal-sort-keys": false,
     "quotemark": [true, "single", "avoid-escape", "avoid-template"],
     "trailing-comma": false
   }
