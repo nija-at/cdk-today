@@ -1,0 +1,23 @@
+{
+  "name": "cdk-today",
+  "version": "0.1.0",
+  "description": "Github workflow for CDK developers",
+  "author": "Niranjan Jayakar",
+  "license": "Apache-2.0",
+  "bin": "cdk-today",
+  "scripts": {
+    "build": "tsc && tslint -p tsconfig.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "typescript": "^3.7.2",
+    "@types/node": "^12.12.14",
+    "tslint": "^5.20.1",
+    "@types/request-promise-native": "^1.0.17",
+    "@types/request": "^2.48.3"
+  },
+  "dependencies": {
+    "request-promise-native": "^1.0.8",
+    "request": "^2.88.0"
+  }
+}
