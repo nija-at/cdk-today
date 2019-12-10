@@ -2,7 +2,7 @@
 
 import inquirer = require('inquirer');
 import { Connection } from '../lib/github';
-import { PullRequests } from '../lib/pr';
+import { PullRequests } from '../lib/pullrequests';
 
 enum Questions {
   PR_ATTENTION = 'PRs assigned to me that need to be reviewed',

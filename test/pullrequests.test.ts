@@ -1,5 +1,5 @@
 import { Connection } from '../lib/github';
-import { PullRequests } from '../lib/pr';
+import { PullRequests } from '../lib/pullrequests';
 
 abstract class MockConnection extends Connection {
   protected abstract items: any[];
