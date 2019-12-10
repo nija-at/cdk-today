@@ -1,5 +1,5 @@
 import { Connection } from '../lib/github';
-import { PullRequests } from '../lib/pullrequests';
+import { Issues } from '../lib/issues';
 
 abstract class MockConnection extends Connection {
   protected abstract items: any[];
@@ -18,7 +18,7 @@ abstract class MockConnection extends Connection {
 }
 
 test('pr transformation works', async () => {
-  const prs = await (PullRequests as any).fetchPullRequests(new class extends MockConnection {
+  const issues = await (Issues as any).fetchIssues(new class extends MockConnection {
     protected items = [
       {
         html_url: 'https://test-html-url',
@@ -27,16 +27,16 @@ test('pr transformation works', async () => {
       }
     ];
   }(), 'does-not-matter');
-  expect(prs).toHaveLength(1);
-  const pr = prs[0];
-  expect(pr.url).toBe('https://test-html-url');
-  expect(pr.title).toBe('test-title');
-  expect(pr.repo).toBe('test-org/test-repo');
+  expect(issues).toHaveLength(1);
+  const issue = issues[0];
+  expect(issue.url).toBe('https://test-html-url');
+  expect(issue.title).toBe('test-title');
+  expect(issue.repo).toBe('test-org/test-repo');
 });
 
 test('no results is mapped correctly', async () => {
-  const prs = await (PullRequests as any).fetchPullRequests(new class extends MockConnection {
+  const issues = await (Issues as any).fetchIssues(new class extends MockConnection {
     protected items = [];
   }(), 'does-not-matter');
-  expect(prs).toHaveLength(0);
+  expect(issues).toHaveLength(0);
 });
