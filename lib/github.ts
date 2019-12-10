@@ -27,7 +27,3 @@ export class Connection {
     return uri.replace(/(?<!:)\/+/g, '/');
   }
 }
-
-// call(`https://api.github.com/repos/${REPO}/issues?page=1&per_page=${PAGE_SIZE}`).then((result) => {
-//   console.log(result);
-// });
