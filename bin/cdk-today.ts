@@ -1,10 +1,19 @@
 // tslint:disable:no-console
 
+import colors = require('colors');
 import inquirer = require('inquirer');
+import { promisify } from 'util';
+import { argv } from 'yargs';
+import { Config, ConfigEntries } from '../lib/config';
+import { UserError } from '../lib/errors';
 import { Connection } from '../lib/github';
 import { Issues } from '../lib/issues';
-import { PullRequest, PullRequests } from '../lib/pullrequests';
+import { PullRequests } from '../lib/pullrequests';
 import { TableView } from '../lib/tableview';
+
+const sleep = promisify(setTimeout);
+
+const tableview = new TableView();
 
 enum Questions {
   PR_AWAITING_REVIEW = 'PRs assigned to me and need to be reviewed',
@@ -16,52 +25,79 @@ enum Questions {
   QUIT = 'Quit!',
 }
 
-const tableview = new TableView();
-
 async function ask(conn: Connection) {
-  return inquirer.prompt([
+  const answers = await inquirer.prompt([
     {
       name: 'response',
       type: 'list',
       message: '🌅 Where would you like to start? 🌅',
       choices: Object.values(Questions),
     }
-  ]).then((answers) => {
-    switch (answers.response) {
-      case Questions.PR_AWAITING_REVIEW:
-        PullRequests.qAwaitingReview(conn).then((prs) => {
-          console.log(tableview.stringify(prs, ['repo', 'title', 'url']));
-        });
-        break;
-      case Questions.BUG_UNPRIORITIZED:
-        Issues.qUnprioritzedBugs(conn).then((issues) => {
-          console.log(tableview.stringify(issues, ['repo', 'title', 'url']));
-        });
-        break;
-      case Questions.BUG_P1:
-        Issues.qP1Bugs(conn).then((issues) => {
-          console.log(tableview.stringify(issues, ['repo', 'title', 'url']));
-        });
-        break;
-      case Questions.QUIT:
-        process.exit();
+  ]);
+  switch (answers.response) {
+    case Questions.PR_AWAITING_REVIEW:
+      PullRequests.qAwaitingReview(conn).then((prs) => {
+        console.log(tableview.stringify(prs, ['repo', 'title', 'url']));
+      });
+      break;
+    case Questions.BUG_UNPRIORITIZED:
+      Issues.qUnprioritzedBugs(conn).then((issues) => {
+        console.log(tableview.stringify(issues, ['repo', 'title', 'url']));
+      });
+      break;
+    case Questions.BUG_P1:
+      Issues.qP1Bugs(conn).then((issues) => {
+        console.log(tableview.stringify(issues, ['repo', 'title', 'url']));
+      });
+      break;
+    case Questions.QUIT:
+      process.exit();
     }
-  });
 }
 
-function main() {
-  const ghconn = new Connection({
-    user: 'nija-at',
-  });
-  console.log('Welcome to your day!');
+async function setup(config: Config): Promise<ConfigEntries> {
+  console.log('🌅 Welcome to cdk-today! 🌅');
+  console.log('Running first time setup...');
+  const answers = await inquirer.prompt([
+    {
+      name: 'user',
+      type: 'input',
+      message: 'What is your Github username?',
+    }
+  ]);
+  const data = { user: answers.user, };
+  console.log(`Saving configuration to ${config.file}...`);
+  await sleep(1500); // a bit of sleep, so the user can read what's on the screen.
+  return data;
+}
 
-  ask(ghconn);
+async function main() {
+  try {
+    const config = new Config({ setup });
+    if (argv.setup) {
+      await config.setup();
+    } else {
+      const user = await config.user();
+      const ghconn = new Connection({
+        user,
+      });
+      console.log('Welcome to your day!');
 
-  // TODO: Fix and turn on loop
-  // const loop = (): any => {
-  //   return ask(ghconn).then(loop);
-  // };
-  // Promise.resolve().then(loop);
+      await ask(ghconn);
+
+      // TODO: Fix and turn on loop
+      // const loop = (): any => {
+      //   return ask(ghconn).then(loop);
+      // };
+      // Promise.resolve().then(loop);
+    }
+  } catch (err) {
+    if (err.name === UserError.NAME) {
+      console.error(colors.red(err.message));
+    } else {
+      throw err;
+    }
+  }
 }
 
 main();

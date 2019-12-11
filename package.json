@@ -21,10 +21,12 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
+    "colors": "^1.4.0",
     "request-promise-native": "^1.0.8",
     "request": "^2.88.0",
     "inquirer": "^7.0.0",
-    "table": "^5.4.6"
+    "table": "^5.4.6",
+    "yargs": "^15.0.2"
   },
   "jest": {
     "clearMocks": true,
