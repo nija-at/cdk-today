@@ -4,7 +4,7 @@ const REPOS_PREFIX = 'https://api.github.com/repos/';
 
 export class PullRequests {
   public static async qAwaitingReview(conn: Connection): Promise<PullRequest[]> {
-    return await this.fetchPullRequests(conn, `is:open+is:pr+assignee:${conn.user}+archived:false+review:required`);
+    return await this.fetchPullRequests(conn, `is:open+is:pr+assignee:${conn.user}+archived:false+review:required+-author:${conn.user}`);
   }
 
   private static async fetchPullRequests(conn: Connection, query: string): Promise<PullRequest[]> {
