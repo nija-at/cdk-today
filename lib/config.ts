@@ -30,7 +30,7 @@ export class Config {
   }
 
   public async user(): Promise<string> {
-    const u = (await this.fetchConfig()).user;
+    const u: string = (await this.fetchConfig()).user;
     if (!u) {
       throw new UserError(`Could not find user in config file [${this.file}]. Re-run with the '--setup' flag.`);
     }
@@ -38,17 +38,17 @@ export class Config {
   }
 
   public async setup() {
-    if (!await exists(this.file)) {
-      if (!this.setupCb) {
-        throw new Error('setup callback missing!');
-      }
-      const entries = await this.setupCb(this);
-      await writeFile(this.file, JSON.stringify(entries, undefined, 2), { encoding: 'utf-8' });
+    if (!this.setupCb) {
+      throw new Error('setup callback missing!');
     }
+    const entries = await this.setupCb(this);
+    await writeFile(this.file, JSON.stringify(entries, undefined, 2), { encoding: 'utf-8' });
   }
 
   private async fetchConfig(): Promise<any> {
-    await this.setup();
+    if (!await exists(this.file)) {
+      throw new UserError(`Could not find setup file at [${this.file}]. Re-run with the --setup flag`);
+    }
     return JSON.parse(await readFile(this.file, { encoding: 'utf-8'} ));
   }
 }
