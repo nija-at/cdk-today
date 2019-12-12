@@ -1,4 +1,4 @@
-import { table, TableUserConfig } from 'table';
+import { getBorderCharacters, table, TableUserConfig } from 'table';
 
 interface TableViewProps {
   readonly truncWidth: number;
@@ -32,38 +32,25 @@ export class TableView {
     if (keyOrder === undefined) {
       keyOrder = Object.keys(items[0]) as Array<keyof T>;
     }
-    const data: any[][] = items.map((item) => keyOrder!.map((k) => {
+    const data: string[][] = items.map((item) => ['*'].concat(keyOrder!.map((k) => {
       const val = item[k];
       if (typeof(val) === 'string') {
         return val.length > this.truncWidth ? `${val.substring(0, this.truncWidth - 3)}...` : val;
       }
-      return val;
-    }));
+      return `${val}`;
+    })));
     return table(data, this.buildConfig());
   }
 
   private buildConfig(): TableUserConfig {
     return {
       singleLine: true,
-      border: {
-        topBody: '─',
-        topJoin: '─',
-        topLeft: '┌',
-        topRight: '┐',
-
-        bottomBody: '─',
-        bottomJoin: '─',
-        bottomLeft: '└',
-        bottomRight: '┘',
-
-        bodyLeft: '│',
-        bodyRight: '│',
-        bodyJoin: ' ',
-
-        joinBody: ' ',
-        joinLeft: '├',
-        joinRight: '┤',
-        joinJoin: ' '
+      border: getBorderCharacters('void'),
+      columns: {
+        0: {
+          paddingLeft: 0,
+          paddingRight: 0,
+        }
       }
     };
   }
