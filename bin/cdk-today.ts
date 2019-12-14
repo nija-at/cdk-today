@@ -8,12 +8,8 @@ import { Config, ConfigEntries } from '../lib/config';
 import { UserError } from '../lib/errors';
 import { Connection } from '../lib/github';
 import { Issues } from '../lib/issues';
-import { PullRequests } from '../lib/pullrequests';
-import { TableView } from '../lib/tableview';
 
 const sleep = promisify(setTimeout);
-
-const tableview = new TableView();
 
 enum Questions {
   PR_AWAITING_REVIEW = 'PRs assigned to me and need to be reviewed',
@@ -36,18 +32,18 @@ async function ask(conn: Connection) {
   ]);
   switch (answers.response) {
     case Questions.PR_AWAITING_REVIEW:
-      PullRequests.qAwaitingReview(conn).then((prs) => {
-        console.log(tableview.stringify(prs, ['repo', 'title', 'url']));
+      Issues.qAwaitingReview(conn).then((issues) => {
+        console.log(issues.tablify());
       });
       break;
     case Questions.BUG_UNPRIORITIZED:
       Issues.qUnprioritzedBugs(conn).then((issues) => {
-        console.log(tableview.stringify(issues, ['repo', 'title', 'url']));
+        console.log(issues.tablify());
       });
       break;
     case Questions.BUG_P1:
       Issues.qP1Bugs(conn).then((issues) => {
-        console.log(tableview.stringify(issues, ['repo', 'title', 'url']));
+        console.log(issues.tablify());
       });
       break;
     case Questions.QUIT:
