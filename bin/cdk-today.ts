@@ -14,6 +14,8 @@ const sleep = promisify(setTimeout);
 enum Questions {
   PR_AWAITING_REVIEW = 'PRs assigned to me and need to be reviewed',
 
+  PR_CHANGES_REQUESTED = 'PRs opened by me that have unaddressed comments',
+
   BUG_UNPRIORITIZED = 'Bugs assigned to me and are not prioritized',
 
   BUG_P1 = 'Bugs assigned to me and whose priority is P1',
@@ -33,6 +35,11 @@ async function ask(conn: Connection) {
   switch (answers.response) {
     case Questions.PR_AWAITING_REVIEW:
       Issues.qAwaitingReview(conn).then((issues) => {
+        console.log(issues.tablify());
+      });
+      break;
+    case Questions.PR_CHANGES_REQUESTED:
+      Issues.qChangesRequested(conn).then((issues) => {
         console.log(issues.tablify());
       });
       break;

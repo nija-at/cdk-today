@@ -39,6 +39,11 @@ export class Issues {
       await this.fetchIssues(conn, `is:open+is:pr+-is:draft+assignee:${conn.user}+archived:false+review:required+-author:${conn.user}`));
   }
 
+  public static async qChangesRequested(conn: Connection): Promise<Issues> {
+    return new Issues(
+      await this.fetchIssues(conn, `is:open is:pr author:${conn.user} archived:false review:changes_requested`));
+  }
+
   private static async fetchIssues(conn: Connection, query: string): Promise<Issue[]> {
     const res = await conn.call(`/search/issues?q=${query}`);
     return res.items.map((item: any) => {
