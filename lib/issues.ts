@@ -34,7 +34,7 @@ export class Issues {
 
   public static async qAwaitingReview(conn: Connection): Promise<Issues> {
     return new Issues(
-      await this.fetchIssues(conn, `is:open+is:pr+assignee:${conn.user}+archived:false+review:required+-author:${conn.user}`));
+      await this.fetchIssues(conn, `is:open+is:pr+-is:draft+assignee:${conn.user}+archived:false+review:required+-author:${conn.user}`));
   }
 
   private static async fetchIssues(conn: Connection, query: string): Promise<Issue[]> {
