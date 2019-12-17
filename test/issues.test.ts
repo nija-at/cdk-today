@@ -43,6 +43,7 @@ test('empty response from github results in empty results', async () => {
 
 test('tablify - truncation works', () => {
   const issues = new Issues([{
+    id: 1234,
     url: 'no-trunc',
     title: 'exactly-10',
     repo: 'definitely-truncated',
@@ -57,6 +58,7 @@ test('tablify - truncation works', () => {
 
 test('tablify - output honours specified key order', () => {
   const issue: Issue = {
+    id: 1234,
     url: 'test-url',
     title: 'test-title',
     repo: 'test-repo',

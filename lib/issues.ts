@@ -2,6 +2,8 @@ import { getBorderCharacters, table, TableUserConfig } from 'table';
 import { Connection } from './github';
 
 export interface Issue {
+  readonly id: number;
+
   readonly url: string;
 
   readonly title: string;
@@ -21,7 +23,7 @@ const REPOS_PREFIX = 'https://api.github.com/repos/';
 
 export class Issues {
 
-  public static KEY_ORDER: Array<keyof Issue> = ['repo', 'title', 'url'];
+  public static KEY_ORDER: Array<keyof Issue> = ['id', 'repo', 'title', 'url'];
 
   public static async qUnprioritzedBugs(conn: Connection): Promise<Issues> {
     return new Issues(
@@ -41,6 +43,7 @@ export class Issues {
     const res = await conn.call(`/search/issues?q=${query}`);
     return res.items.map((item: any) => {
       return {
+        id: item.number,
         url: item.html_url,
         title: item.title,
         repo: item.repository_url.substring(REPOS_PREFIX.length),
