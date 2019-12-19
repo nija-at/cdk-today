@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "bin": "cdk-today",
   "scripts": {
-    "build": "tsc && tslint -p tsconfig.json",
+    "build": "tsc && tslint -p tsconfig.json && markdownlint **/*.md -i node_modules",
     "test": "jest"
   },
   "devDependencies": {
@@ -17,6 +17,7 @@
     "@types/request-promise-native": "^1.0.17",
     "@types/table": "^4.0.7",
     "jest": "^24.9.0",
+    "markdownlint-cli": "^0.20.0",
     "tslint": "^5.20.1",
     "typescript": "^3.7.2"
   },
